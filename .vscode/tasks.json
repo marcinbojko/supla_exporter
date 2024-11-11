@@ -1,0 +1,17 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "prettier",
+      "type": "shell",
+      "command": "npx prettier . --write",
+      "presentation": {
+        "reveal": "always",
+        "echo": true,
+        "showReuseMessage": false,
+        "focus": true,
+        "clear": true
+      }
+    }
+  ]
+}

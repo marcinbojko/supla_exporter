@@ -1,0 +1,49 @@
+---
+name: Build and Push Docker Image
+on:
+  push:
+    branches: [main, master, test]
+    tags: ["*"]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch: # Allows manual triggering
+
+permissions:
+  contents: write
+  pull-requests: write
+  packages: write
+  actions: read
+  deployments: read
+  id-token: write
+  issues: write
+  discussions: read
+  pages: read
+  repository-projects: read
+  security-events: read
+  attestations: read # Added this
+  checks: write # Added this
+  statuses: write # Added
+
+jobs:
+  super-lint:
+    name: Lint code base
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Run Super-Linter
+        uses: github/super-linter@main
+        env:
+          DEFAULT_BRANCH: ${{ github.ref_name }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_ALL_CODEBASE: ${{ github.event_name != 'pull_request' }}
+          VALIDATE_GO: false
+          VALIDATE_GO_MODULES: false
+          DOCKERFILE_HADOLINT_FILE_NAME: .hadolint.yaml
+  build-and-push:
+    needs: super-lint
+    name: Build and Push Docker Image
+    uses: marcinbojko/reusable-workflows/.github/workflows/docker_build_and_push.yml@main
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
