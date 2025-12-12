@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"strings"
 	"sync/atomic"
-	"test/config"
+	"supla_exporter/config"
 
 	"github.com/PuerkitoBio/goquery"
 )

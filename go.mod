@@ -1,4 +1,4 @@
-module test
+module supla_exporter
 
 go 1.23
 

@@ -1,5 +1,5 @@
 # Start from the official Golang image
-FROM golang:1.23-alpine AS builder
+FROM golang:1.24-alpine AS builder
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -17,7 +17,7 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -o supla_exporter .
 
 # Start a new stage from scratch
-FROM alpine:3.20.3
+FROM alpine:3.21
 
 
 # Create non-root user first

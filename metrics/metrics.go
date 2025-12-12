@@ -2,7 +2,7 @@ package metrics
 
 import (
 	"log/slog"
-	"test/parser"
+	"supla_exporter/parser"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
@@ -84,21 +84,20 @@ func UpdateMetrics(info *parser.SuplaInfo) {
 		upValue = 1.0
 	}
 
-	// Clean existing metrics for this device
-	SuplaDeviceInfo.DeletePartialMatch(prometheus.Labels{"url": info.URL})
-	SuplaDeviceState.DeletePartialMatch(prometheus.Labels{"url": info.URL})
-	SuplaDeviceNetwork.DeletePartialMatch(prometheus.Labels{"url": info.URL})
-	SuplaDeviceFirmware.DeletePartialMatch(prometheus.Labels{"url": info.URL})
-	SuplaDeviceMemory.DeletePartialMatch(prometheus.Labels{"url": info.URL})
-	SuplaDeviceUp.DeletePartialMatch(prometheus.Labels{"url": info.URL})
-
-	// Update device up/down status metric
+	// Update device up/down status metric (always emitted, never deleted)
 	SuplaDeviceUp.WithLabelValues(info.URL).Set(upValue)
 
 	if upValue == 0 {
 		slog.Debug("Device not present: ", "url", info.URL)
 		return
 	}
+
+	// Clean existing metrics for this device (only when we have fresh data to replace them)
+	SuplaDeviceInfo.DeletePartialMatch(prometheus.Labels{"url": info.URL})
+	SuplaDeviceState.DeletePartialMatch(prometheus.Labels{"url": info.URL})
+	SuplaDeviceNetwork.DeletePartialMatch(prometheus.Labels{"url": info.URL})
+	SuplaDeviceFirmware.DeletePartialMatch(prometheus.Labels{"url": info.URL})
+	SuplaDeviceMemory.DeletePartialMatch(prometheus.Labels{"url": info.URL})
 
 	// Base device info
 	SuplaDeviceInfo.WithLabelValues(

@@ -1,15 +1,20 @@
 {
-  "name": "Go & Node.js",
-  "image": "mcr.microsoft.com/devcontainers/go:1-1.23-bookworm",
+  "name": "Supla Exporter",
+  "image": "mcr.microsoft.com/devcontainers/go:1.23",
   "features": {
-    "ghcr.io/devcontainers/features/node:1": {
-      "version": "lts"
-    }
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
   },
-  "postCreateCommand": "npm install -g typescript @types/node prettier",
   "customizations": {
     "vscode": {
-      "extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
+      "extensions": ["golang.go", "ms-azuretools.vscode-docker"],
+      "settings": {
+        "go.useLanguageServer": true,
+        "go.lintTool": "golangci-lint",
+        "go.lintOnSave": "package"
+      }
     }
-  }
+  },
+  "forwardPorts": [2112],
+  "postCreateCommand": "go mod download",
+  "remoteUser": "vscode"
 }

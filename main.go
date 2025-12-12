@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"test/config"
-	"test/metrics"
-	"test/parser"
+	"supla_exporter/config"
+	"supla_exporter/metrics"
+	"supla_exporter/parser"
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -96,8 +96,6 @@ func main() {
 		}
 		config.Set(cfg)
 	}
-
-	// globalTimeout = time.Duration(cfg.Global.Timeout) * time.Second
 
 	// Set log level based on configuration
 	logLevel := getLogLevel(cfg.Global.LogLevel)
