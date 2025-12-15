@@ -66,13 +66,14 @@ global:
   timeout: 5 # Global timeout for HTTP requests in seconds
   port: 2112 # Port for the metrics server
   log_level: "info" # Log level (debug, info, warn, error)
-  worker: 5 # number of default workers for parsing web pages
+  log_format: "logfmt" # Log format (logfmt, json)
+  workers: 5 # Number of workers for parsing web pages
 
 devices:
   - url: "http://192.168.1.100"
     username: "user1"
     password: "pass1"
-  - url: "http://192.168.1.101"<!-- TOC -->
+  - url: "http://192.168.1.101"
     username: "user2"
     password: "pass2"
 ```
@@ -173,6 +174,8 @@ The application uses structured logging with configurable log levels. Set the de
 - `info`: General operational information
 - `warn`: Warnings and non-critical issues
 - `error`: Error conditions
+
+Log format can also be configured to either `logfmt` or `json` for better integration with logging systems.
 
 ## Project Structure
 
