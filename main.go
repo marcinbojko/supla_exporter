@@ -97,16 +97,21 @@ func main() {
 		config.Set(cfg)
 	}
 
-	// Set log level based on configuration
+	// Set log level and format based on configuration
 	logLevel := getLogLevel(cfg.Global.LogLevel)
-	logHandler := slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{
-		Level: logLevel,
-	})
+	handlerOpts := &slog.HandlerOptions{Level: logLevel}
+
+	var logHandler slog.Handler
+	if cfg.Global.LogFormat == "json" {
+		logHandler = slog.NewJSONHandler(os.Stderr, handlerOpts)
+	} else {
+		logHandler = slog.NewTextHandler(os.Stderr, handlerOpts)
+	}
+
 	logger := slog.New(logHandler)
 	slog.SetDefault(logger)
 
-	slog.Info("Log level set", "level", cfg.Global.LogLevel)
-	slog.Debug("This is a debug message to verify log level")
+	slog.Info("Logger configured", "level", cfg.Global.LogLevel, "format", cfg.Global.LogFormat)
 
 	// Initial metrics update
 	updateMetrics(cfg.Devices, cfg)

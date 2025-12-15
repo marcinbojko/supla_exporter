@@ -16,11 +16,12 @@ type Device struct {
 }
 
 type GlobalConfig struct {
-	Interval int    `yaml:"interval"`
-	Port     int    `yaml:"port"`
-	LogLevel string `yaml:"log_level"`
-	Timeout  int    `yaml:"timeout"`
-	Workers  int    `yaml:"workers"`
+	Interval  int    `yaml:"interval"`
+	Port      int    `yaml:"port"`
+	LogLevel  string `yaml:"log_level"`
+	LogFormat string `yaml:"log_format"`
+	Timeout   int    `yaml:"timeout"`
+	Workers   int    `yaml:"workers"`
 }
 
 type Config struct {
@@ -30,11 +31,12 @@ type Config struct {
 
 // Default values for global config
 var defaultGlobal = GlobalConfig{
-	Interval: 60,
-	Port:     2112,
-	LogLevel: "info",
-	Timeout:  5,
-	Workers:  5,
+	Interval:  60,
+	Port:      2112,
+	LogLevel:  "info",
+	LogFormat: "logfmt",
+	Timeout:   5,
+	Workers:   5,
 }
 
 var globalConfig *Config
@@ -77,6 +79,12 @@ func validate(cfg *Config) error {
 		// valid log levels
 	default:
 		return fmt.Errorf("global.log_level must be one of: debug, info, warn, error")
+	}
+	switch cfg.Global.LogFormat {
+	case "logfmt", "json":
+		// valid log formats
+	default:
+		return fmt.Errorf("global.log_format must be one of: logfmt, json")
 	}
 	if cfg.Global.Timeout < 1 || cfg.Global.Timeout > 30 {
 		return fmt.Errorf("global.timeout must be between 1 and 30 seconds, got %d", cfg.Global.Timeout)

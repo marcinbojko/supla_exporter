@@ -88,7 +88,7 @@ func UpdateMetrics(info *parser.SuplaInfo) {
 	SuplaDeviceUp.WithLabelValues(info.URL).Set(upValue)
 
 	if upValue == 0 {
-		slog.Debug("Device not present: ", "url", info.URL)
+		slog.Debug("Device not present", "url", info.URL)
 		return
 	}
 

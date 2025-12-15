@@ -1,7 +1,6 @@
 package parser
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 	"log/slog"
@@ -31,8 +30,12 @@ var deviceCount int64
 
 // LogValue implements the slog.LogValuer interface
 func (si *SuplaInfo) LogValue() slog.Value {
-	b, _ := json.Marshal(si)
-	return slog.StringValue(string(b))
+	return slog.GroupValue(
+		slog.String("name", si.Name),
+		slog.String("url", si.URL),
+		slog.String("firmware", si.Firmware),
+		slog.Bool("up", si.Up),
+	)
 }
 
 // FetchAndParseWithPool processes multiple devices using a worker pool
@@ -296,6 +299,7 @@ func GetAndResetDeviceCount() int64 {
 
 // GetDeviceCount returns the current count of devices without resetting it
 func GetDeviceCount() int64 {
-	slog.Debug("Parsed device info", "device_count", deviceCount)
-	return atomic.LoadInt64(&deviceCount)
+	count := atomic.LoadInt64(&deviceCount)
+	slog.Debug("Device count retrieved", "device_count", count)
+	return count
 }
